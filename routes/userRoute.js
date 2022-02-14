@@ -24,12 +24,10 @@ router.post(
     try {
       let user = await User.findOne({ email: req.body.email });
       if (user) {
-        return res
-          .status(400)
-          .json({
-            success,
-            error: "Please Enter Valid Email!!! Your email already exists",
-          });
+        return res.status(400).json({
+          success,
+          error: "Please Enter Valid Email!!! Your email already exists",
+        });
       }
       user = await User.create({
         email: req.body.email,
@@ -102,7 +100,7 @@ cron.schedule("1 * * * * *", () => {
       console.log("running notification...");
       // Generate test SMTP service account from ethereal.email
       // Only needed if you don't have a real mail account for testing
-      let testAccount = await nodemailer.createTestAccount();
+      // let testAccount = await nodemailer.createTestAccount();
 
       // // create reusable transporter object using the default SMTP transport
       let transporter = nodemailer.createTransport({
@@ -119,15 +117,17 @@ cron.schedule("1 * * * * *", () => {
 
       try {
         User.find({}, function (err, users) {
-          users.forEach(async function (user) {
-            await transporter.sendMail({
-              from: process.env.MAIL_FROM, // sender address
-              to: user.email, // list of receivers
-              subject: "Your upcoming Coding Contests", // Subject line
-              text: `Hi, Ready for contest`, // plain text body
-              html: message.htmlbody(data), // html body
+          if (users.length) {
+            users.forEach(async function (user) {
+              await transporter.sendMail({
+                from: process.env.MAIL_FROM, // sender address
+                to: user.email, // list of receivers
+                subject: "Your upcoming Coding Contests", // Subject line
+                text: `Hi, Ready for contest`, // plain text body
+                html: message.htmlbody(data), // html body
+              });
             });
-          });
+          }
         });
       } catch (error) {
         console.error(error.message);
