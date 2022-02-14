@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+require("dotenv").config();
 
-const mongoURI = 'mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false';
+const mongoURI = process.env.MONGODB_URL;
 
 const connectToMongo = ()=>{
     mongoose.connect(mongoURI, ()=>{
@@ -9,3 +10,5 @@ const connectToMongo = ()=>{
 }
 
 module.exports = connectToMongo;
+
+// mongodb+srv://dbUser:<password>@cluster0.fpmy2.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
