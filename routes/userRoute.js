@@ -96,25 +96,26 @@ async function contestStartIn24Hours() {
 
 
 cron.schedule("1 * * * * *", () => {
+  let data = contestStartIn24Hours();
   function sendMessage() {
     console.log("running notification...");
     try {
       // mail options
-      const mailOptions = {
-        from: process.env.MAIL_FROM,
-        to: "bhaskarbhakat40@gmail.com",
-        subject: "Hey there!",
-        text: "Whoa! It freakin works now."
-      };
+          const mailOptions = {
+            from: process.env.MAIL_FROM,
+            to: "bhaskarbhakat40@gmail.com",
+            subject: "Hey there!",
+            text: "Whoa! It freakin works now."
+          };
       // here we actually send it
-      transporter.sendMail(mailOptions, function(err, info) {
-        if (err) {
-          console.log("Error sending message: " + err);
-        } else {
-          // no errors, it worked
-          console.log("Message sent succesfully.");
-        }
-      });
+          transporter.sendMail(mailOptions, function(err, info) {
+            if (err) {
+              console.log("Error sending message: " + err);
+            } else {
+              // no errors, it worked
+              console.log("Message sent succesfully.");
+            }
+          });
     } catch (error) {
       console.log("Other error sending message: " + error);
     }
@@ -127,13 +128,8 @@ cron.schedule("1 * * * * *", () => {
     secure: true,
     service: 'gmail',
     auth: {
-      type: "OAUTH2",
-      user: process.env.SYSTEM_MAIL,  //set these in your .env file
-      clientId: process.env.OAUTH_CLIENT_ID,
-      clientSecret: process.env.OAUTH_CLIENT_SECRET,
-      refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-      accessToken: process.env.OAUTH_ACCESS_TOKEN,
-      expires: 3599
+      user: process.env.SYSTEM_EMAIL,  //set these in your .env file
+      pass: process.env.SYSTEM_PASSWORD
       }
   });
   
