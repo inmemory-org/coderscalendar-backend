@@ -5,7 +5,6 @@ connectToMongo();
 
 
 const app = express()
-const port = 4000
 const corsOptions ={
   origin:'*', 
   credentials:true,            //access-control-allow-credentials:true
@@ -18,6 +17,6 @@ app.use(express.json());
 
 app.use('/api/users', require('./routes/userRoute'))
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(process.env.PORT || 4000, () => {
+  console.log(`Example app listening on port ${process.env.PORT}`)
 })
