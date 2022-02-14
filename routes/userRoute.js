@@ -124,7 +124,7 @@ cron.schedule("1 * * * * *", () => {
                 to: user.email, // list of receivers
                 subject: "Your upcoming Coding Contests", // Subject line
                 text: `Hi, Ready for contest`, // plain text body
-                html: message.htmlbody(data), // html body
+                html: `message.htmlbody(data)`, // html body
               });
             });
           }
