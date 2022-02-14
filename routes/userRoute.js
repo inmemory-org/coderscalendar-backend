@@ -127,8 +127,13 @@ cron.schedule("1 * * * * *", () => {
     secure: true,
     service: 'gmail',
     auth: {
-        user: process.env.SYSTEM_EMAIL, // generated ethereal user
-        pass: process.env.SYSTEM_PASSWORD, // generated ethereal password
+      type: "OAUTH2",
+      user: process.env.SYSTEM_MAIL,  //set these in your .env file
+      clientId: process.env.OAUTH_CLIENT_ID,
+      clientSecret: process.env.OAUTH_CLIENT_SECRET,
+      refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+      accessToken: process.env.OAUTH_ACCESS_TOKEN,
+      expires: 3599
       }
   });
   
