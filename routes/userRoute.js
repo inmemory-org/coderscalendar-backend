@@ -94,94 +94,90 @@ async function contestStartIn24Hours() {
   return processed_data;
 }
 
+async function findUsers() {
+  let data = await User.find({});
+  return data;
+}
 
-cron.schedule("1 * * * * *", () => {
-  let data = contestStartIn24Hours();
-  function sendMessage() {
-    console.log("running notification...");
+cron.schedule("*/10 * * * * *", () => {
+  // (async function run() {
+  //   console.log("running notification...");
+  //   // Generate test SMTP service account from ethereal.email
+  //   // Only needed if you don't have a real mail account for testing
+  //   // let testAccount = await nodemailer.createTestAccount();
+
+  //   // // create reusable transporter object using the default SMTP transport
+  //   let transporter = nodemailer.createTransport({
+  //     host: "hotmail",
+  //     port: 587,
+  //     secure: false, // true for 465, false for other ports
+  //     auth: {
+  //       user: process.env.SYSTEM_EMAIL, // generated ethereal user
+  //       pass: process.env.SYSTEM_PASSWORD, // generated ethereal password
+  //     },
+  //   });
+
+  //   let data = await contestStartIn24Hours();
+
+  //   try {
+  //     User.find({}, function (err, users) {
+  //       if (users.length) {
+  //         users.forEach(async function (user) {
+  //           await transporter.sendMail({
+  //             from: process.env.MAIL_FROM, // sender address
+  //             to: user.email, // list of receivers
+  //             subject: "Your upcoming Coding Contests", // Subject line
+  //             text: `Hi, Ready for contest`, // plain text body
+  //             html: `message.htmlbody(data)`, // html body
+  //           });
+  //         });
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error(error.message);
+  //     res.status(500).send("Internal Server Error");
+  //   }
+  // }.then(
+
+  // ));
+
+  async function main() {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "smtp.office365.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.SYSTEM_EMAIL, // generated ethereal user
+        pass: process.env.SYSTEM_PASSWORD, // generated ethereal password
+      },
+    });
+
+    let data = await contestStartIn24Hours();
+    let users = await findUsers();
+
+    // send mail with defined transport object
     try {
-      // mail options
-          const mailOptions = {
-            from: process.env.MAIL_FROM,
-            to: "bhaskarbhakat40@gmail.com",
-            subject: "Hey there!",
-            text: "Whoa! It freakin works now."
-          };
-      // here we actually send it
-          transporter.sendMail(mailOptions, function(err, info) {
-            if (err) {
-              console.log("Error sending message: " + err);
-            } else {
-              // no errors, it worked
-              console.log("Message sent succesfully.");
-            }
-          });
+      for (let i = 0; i < users.length; i++) {
+        await transporter.sendMail({
+          from: process.env.MAIL_FROM, // sender address
+          to: users[i].email, // list of receivers
+          subject: "Your upcoming Coding Contests", // Subject line
+          text: `Hi, Ready for contest`, // plain text body
+          html: `message.htmlbody(data)`, // html body
+        });
+        console.log("Email sent");
+      }
     } catch (error) {
-      console.log("Other error sending message: " + error);
+      console.error(error.message);
+      res.status(500).send("Internal Server Error");
     }
   }
-  
-  // thats the key part, without all these it didn't work for me
-  let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    service: 'gmail',
-    auth: {
-      user: process.env.SYSTEM_EMAIL,  //set these in your .env file
-      pass: process.env.SYSTEM_PASSWORD
-      }
-  });
-  
-  // invoke sending function
-  sendMessage();
-})
-
-
-// cron.schedule("1 * * * * *", () => {
-//   try {
-//     (async function run() {
-//       console.log("running notification...");
-//       // Generate test SMTP service account from ethereal.email
-//       // Only needed if you don't have a real mail account for testing
-//       // let testAccount = await nodemailer.createTestAccount();
-
-//       // // create reusable transporter object using the default SMTP transport
-//       let transporter = nodemailer.createTransport({
-//         host: "smtp.gmail.com",
-//         port: 465,
-//         secure: true, // true for 465, false for other ports
-//         auth: {
-//           user: process.env.SYSTEM_EMAIL, // generated ethereal user
-//           pass: process.env.SYSTEM_PASSWORD, // generated ethereal password
-//         },
-//       });
-
-//       let data = await contestStartIn24Hours();
-
-//       try {
-//         User.find({}, function (err, users) {
-//           if (users.length) {
-//             users.forEach(async function (user) {
-//               await transporter.sendMail({
-//                 from: process.env.MAIL_FROM, // sender address
-//                 to: user.email, // list of receivers
-//                 subject: "Your upcoming Coding Contests", // Subject line
-//                 text: `Hi, Ready for contest`, // plain text body
-//                 html: `message.htmlbody(data)`, // html body
-//               });
-//             });
-//           }
-//         });
-//       } catch (error) {
-//         console.error(error.message);
-//         res.status(500).send("Internal Server Error");
-//       }
-//     })();
-//   } catch (error) {
-//     console.error(error.message);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
+  main().catch(console.error);
+});
 
 module.exports = router;
