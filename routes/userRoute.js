@@ -1,12 +1,12 @@
-const express = require("express");
-require("dotenv").config();
-const nodemailer = require("nodemailer");
-const cron = require("node-cron");
-const User = require("../models/UserModel");
+import express from "express";
+import "dotenv/config";
+import fetch from "node-fetch";
+import nodemailer from "nodemailer";
+import cron from "node-cron";
+import User from "../models/UserModel.js";
 const router = express.Router();
-const { body, validationResult, Result } = require("express-validator");
-const axios = require("axios");
-const message = require("../notification/message");
+import { body, validationResult, Result } from "express-validator";
+// const message = require("../notification/message");
 
 // add user into our database : Create User : POST
 router.post(
@@ -80,26 +80,55 @@ router.delete("/deleteuser", async (req, res) => {
   }
 });
 
-async function contestStartIn24Hours() {
-  let res = await axios.get("https://kontests.net/api/v1/all");
+const contestStartIn24Hours = async () => {
+  const response = await fetch("https://kontests.net/api/v1/all", {
+    method: "GET",
+  });
 
-  let data = res.data;
+  let data = await response.json();
   let processed_data = [];
-  await data.forEach((element) => {
+
+  data.forEach(function (element) {
     if (element.in_24_hours === "Yes") {
       processed_data.push(element);
     }
   });
 
   return processed_data;
+};
+
+// function contestStartIn24Hours() {
+//   let res = axios.get("https://kontests.net/api/v1/all");
+
+//   let data = res.data;
+//   let processed_data = [];
+
+//   data.forEach(function (element){
+//     if (element.in_24_hours === "Yes") {
+//       processed_data.push(element);
+//     }
+//   })
+
+//   return processed_data;
+// }
+
+const findUsers = async () => {
+  const response = await User.find({});
+  return response;
+};
+
+// function findUsers() {
+//   let data = User.find({});
+//   return data;
+// }
+
+function getQuote() {
+  let quote =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+  return quote;
 }
 
-async function findUsers() {
-  let data = await User.find({});
-  return data;
-}
-
-cron.schedule("*/10 * * * * *", () => {
+cron.schedule("* * * * * *", () => {
   // (async function run() {
   //   console.log("running notification...");
   //   // Generate test SMTP service account from ethereal.email
@@ -140,44 +169,75 @@ cron.schedule("*/10 * * * * *", () => {
   // }.then(
 
   // ));
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  console.log("running main");
+  let transporter = nodemailer.createTransport({
+    service: "gmail", // true for 465, false for other ports
+    auth: {
+      user: process.env.SYSTEM_EMAIL, // generated ethereal user
+      pass: process.env.SYSTEM_PASSWORD, // generated ethereal password
+    },
+  });
 
   async function main() {
-    // Generate test SMTP service account from ethereal.email
-    // Only needed if you don't have a real mail account for testing
-    let testAccount = await nodemailer.createTestAccount();
-
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      host: "smtp.office365.com",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: process.env.SYSTEM_EMAIL, // generated ethereal user
-        pass: process.env.SYSTEM_PASSWORD, // generated ethereal password
-      },
-    });
-
-    let data = await contestStartIn24Hours();
-    let users = await findUsers();
-
-    // send mail with defined transport object
     try {
-      for (let i = 0; i < users.length; i++) {
-        await transporter.sendMail({
-          from: process.env.MAIL_FROM, // sender address
-          to: users[i].email, // list of receivers
-          subject: "Your upcoming Coding Contests", // Subject line
-          text: `Hi, Ready for contest`, // plain text body
-          html: `message.htmlbody(data)`, // html body
+      var quote = await getQuote();
+      let data = await contestStartIn24Hours();
+      let users = await findUsers();
+
+      let mailOptions = {
+        from: process.env.SYSTEM_EMAIL, // TODO: email sender
+        to: "bhaskarbhakat40@gmail.com", // TODO: email receiver
+        subject: "Your upcoming Coding Contests",
+        text: "message.htmlbody(data)",
+      };
+
+      transporter.sendMail(mailOptions, (err, user) => {
+            if (err) {
+                return console.log(err);
+            }
+            return console.log('Email sent!!!');
         });
-        console.log("Email sent");
-      }
     } catch (error) {
-      console.error(error.message);
-      res.status(500).send("Internal Server Error");
+      console.error(error);
     }
   }
-  main().catch(console.error);
+  main();
+  // create reusable transporter object using the default SMTP transport
+
+  // let mailOptions = {
+  //   from: process.env.SYSTEM_EMAIL, // TODO: email sender
+  //   to: "bhaskarbhakat40@gmail.com", // TODO: email receiver
+  //   subject: 'Your upcoming Coding Contests',
+  //   text: 'message.htmlbody(data)'
+  // };
+  // send mail with defined transport object
+  // try {
+  //   console.log("running try block")
+
+  //   if (users.length) {
+  //     users.forEach(function (user) {
+  //       transporter.sendMail(mailOptions, (err, user) => {
+  //         if (err) {
+  //             return log('Error occurs');
+  //         }
+  //         return log('Email sent!!!');
+  //     });
+  //     });
+  //   }
+  // for (let i = 0; i < users.length; i++) {
+  //   await transporter.sendMail({
+  //     from: process.env.SYSTEM_EMAIL, // sender address
+  //     to: users[i].email, // list of receivers
+  //     subject: "Your upcoming Coding Contests", // Subject line
+  //     text: `Hi, Ready for contest`, // plain text body
+  //     html: message.htmlbody(data), // html body
+  //   });
+  // } catch (error) {
+  //   console.error(error.message);
+  //   res.status(500).send("Internal Server Error");
+  // }
 });
 
-module.exports = router;
+export default router;
