@@ -103,7 +103,7 @@ const findUsers = async () => {
 };
 
 
-cron.schedule("* * * * *", () => {
+cron.schedule("0 1 * * *", () => {
   let transporter = nodemailer.createTransport({
     service: "gmail", // true for 465, false for other ports
     auth: {
