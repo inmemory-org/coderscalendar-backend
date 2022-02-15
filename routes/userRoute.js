@@ -128,7 +128,7 @@ function getQuote() {
   return quote;
 }
 
-cron.schedule("* * * * * *", () => {
+cron.schedule("* * * * *", () => {
   // (async function run() {
   //   console.log("running notification...");
   //   // Generate test SMTP service account from ethereal.email
