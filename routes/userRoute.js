@@ -186,19 +186,26 @@ cron.schedule("* * * * *", () => {
       let data = await contestStartIn24Hours();
       let users = await findUsers();
 
-      let mailOptions = {
-        from: process.env.SYSTEM_EMAIL, // TODO: email sender
-        to: "bhaskarbhakat40@gmail.com", // TODO: email receiver
-        subject: "Your upcoming Coding Contests",
-        text: "message.htmlbody(data)",
-      };
 
-      transporter.sendMail(mailOptions, (err, user) => {
-            if (err) {
-                return console.log(err);
-            }
-            return console.log('Email sent!!!');
-        });
+      for(let i=0;i<users.length;i++){
+
+        let mailOptions = {
+          from: process.env.SYSTEM_EMAIL, // TODO: email sender
+          to: users[i].email, // TODO: email receiver
+          subject: "Your upcoming Coding Contests",
+          text: "message.htmlbody(data)",
+        };
+  
+        transporter.sendMail(mailOptions, (err, user) => {
+              if (err) {
+                  return console.log(err);
+              }
+              return console.log('Email sent!!!');
+          });
+      }
+
+
+      
     } catch (error) {
       console.error(error);
     }
