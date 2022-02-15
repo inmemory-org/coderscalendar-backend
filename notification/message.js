@@ -58,4 +58,4 @@ function htmlbody(data) {
   `;
 }
 
-module.exports = { htmlbody };
+export default htmlbody;

@@ -6,7 +6,7 @@ import cron from "node-cron";
 import User from "../models/UserModel.js";
 const router = express.Router();
 import { body, validationResult, Result } from "express-validator";
-// const message = require("../notification/message");
+import message from "../notification/message.js";
 
 // add user into our database : Create User : POST
 router.post(
@@ -122,12 +122,6 @@ const findUsers = async () => {
 //   return data;
 // }
 
-function getQuote() {
-  let quote =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-  return quote;
-}
-
 cron.schedule("* * * * *", () => {
   // (async function run() {
   //   console.log("running notification...");
@@ -182,7 +176,6 @@ cron.schedule("* * * * *", () => {
 
   async function main() {
     try {
-      var quote = await getQuote();
       let data = await contestStartIn24Hours();
       let users = await findUsers();
 
@@ -193,7 +186,7 @@ cron.schedule("* * * * *", () => {
           from: process.env.SYSTEM_EMAIL, // TODO: email sender
           to: users[i].email, // TODO: email receiver
           subject: "Your upcoming Coding Contests",
-          text: "message.htmlbody(data)",
+          text: message.htmlbody(data),
         };
   
         transporter.sendMail(mailOptions, (err, user) => {
@@ -203,9 +196,6 @@ cron.schedule("* * * * *", () => {
               return console.log('Email sent!!!');
           });
       }
-
-
-      
     } catch (error) {
       console.error(error);
     }
