@@ -102,7 +102,6 @@ const findUsers = async () => {
   return response;
 };
 
-
 cron.schedule("0 1 * * *", () => {
   let transporter = nodemailer.createTransport({
     service: "gmail", // true for 465, false for other ports
@@ -117,22 +116,20 @@ cron.schedule("0 1 * * *", () => {
       let data = await contestStartIn24Hours();
       let users = await findUsers();
 
-
-      for(let i=0;i<users.length;i++){
-
+      for (let i = 0; i < users.length; i++) {
         let mailOptions = {
           from: process.env.SYSTEM_EMAIL, // TODO: email sender
           to: users[i].email, // TODO: email receiver
           subject: "Your upcoming Coding Contests",
           html: htmlbody.htmlbody(data),
         };
-  
+
         transporter.sendMail(mailOptions, (err, user) => {
-              if (err) {
-                  return console.log(err);
-              }
-              return console.log('Email sent!!!');
-          });
+          if (err) {
+            return console.log(err);
+          }
+          return console.log("Email sent!!!");
+        });
       }
     } catch (error) {
       console.error(error);
