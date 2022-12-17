@@ -1,11 +1,14 @@
 import express from "express";
+import {validateUser, populateRequestWithUsername} from "../controllers/userValidation.js";
 const router = express.Router();
-import {
-  validateUser,
-  populateRequestWithUserId,
-} from "../controllers/userValidation.js";
 
-router.param("userId", populateRequestWithUserId);
-router.get("/validate-user/:userId", validateUser);
+
+router.param("username", populateRequestWithUsername);
+router.get("/validate-CF-profile/:username", validateUser);
+
+
+// TODO
+// router.get("/validate-CC-profile/:username", validateUser);
+// router.get("/validate-LC-profile/:username", validateUser);
 
 export default router;

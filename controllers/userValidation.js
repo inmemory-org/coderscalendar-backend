@@ -3,15 +3,15 @@ import "dotenv/config";
 const validateUser = (req, res) => {
   try {
     //TO_DO
-    res.send(`valdidateUser Controller Called with ${req.userId}`);
+    res.send(`valdidateUser Controller Called with ${req.username}`);
   } catch (error) {
     console.log(error);
   }
 };
 
-const populateRequestWithUserId = (req, res, next, userId) => {
-  req.userId = userId;
+const populateRequestWithUsername = (req, res, next, username) => {
+  req.username = username;
   next();
 };
 
-export { validateUser, populateRequestWithUserId };
+export { validateUser, populateRequestWithUsername };
