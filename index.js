@@ -1,23 +1,24 @@
-import connectToMongo from './db.js';
-import express, { json } from 'express';
+import "dotenv/config";
+import connectToMongo from "./db.js";
+import express from "express";
 import cors from "cors";
-import usersRoute from './routes/userRoute.js';
-connectToMongo();
+import userValidationRoutes from "./routes/userValidation.js";
 
+const app = express();
+// connectToMongo();
+app.use(
+  cors({
+    origin: "*",
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+  })
+);
 
-const app = express()
-const corsOptions ={
-  origin:'*', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200,
-}
+const port = process.env.PORT || 8000;
+app.use(express.json());
 
-app.use(cors(corsOptions)) // Use this after the variable declaration
+app.use("/api", userValidationRoutes);
 
-app.use(json());
-
-app.use('/api/users', usersRoute);
-
-app.listen(process.env.PORT || 4000, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`)
-})
+app.listen(port, () => {
+  console.log(`BACKEND IS RUNNING`);
+});
