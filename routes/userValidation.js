@@ -2,10 +2,10 @@ import express from "express";
 const router = express.Router();
 import {
   validateUser,
-  populateRequest,
+  populateRequestWithUserId,
 } from "../controllers/userValidation.js";
 
-router.param("userId", populateRequest);
+router.param("userId", populateRequestWithUserId);
 router.get("/validate-user/:userId", validateUser);
 
 export default router;

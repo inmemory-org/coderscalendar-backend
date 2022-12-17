@@ -9,9 +9,9 @@ const validateUser = (req, res) => {
   }
 };
 
-const populateRequest = (req, res, next, userId) => {
+const populateRequestWithUserId = (req, res, next, userId) => {
   req.userId = userId;
   next();
 };
 
-export { validateUser, populateRequest };
+export { validateUser, populateRequestWithUserId };
