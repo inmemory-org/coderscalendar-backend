@@ -9,13 +9,14 @@ const validateUser = async (req, res) => {
           'Accept': 'application/json',
       },
   })
-
+  // TODO : Check username value if there's any semicolon (;) exists in username, if exists show error (invalid username entered) 
   const responseJSON = await response.json();
   const userProfileStatus = responseJSON.status;
-  const userProfileResult = responseJSON.result[0];
 
-  if(userProfileStatus === 'OK')
+  if(userProfileStatus === 'OK') {
+    const userProfileResult = responseJSON.result[0];
     res.send(`Hi ${userProfileResult.rank !== undefined? userProfileResult.rank : "unrated"} ${userProfileResult.handle}`);
+  }
   else
     res.send(responseJSON.comment);
 
