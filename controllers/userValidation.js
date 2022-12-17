@@ -15,7 +15,7 @@ const validateUser = async (req, res) => {
   const userProfileResult = responseJSON.result[0];
 
   if(userProfileStatus === 'OK')
-    res.send(`Hi ${userProfileResult.rank}`);
+    res.send(`Hi ${userProfileResult.rank !== undefined? userProfileResult.rank : "unrated"} ${userProfileResult.handle}`);
   else
     res.send(responseJSON.comment);
 
