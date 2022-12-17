@@ -13,6 +13,7 @@ const validateUser = async (req, res) => {
   const responseJSON = await response.json();
   const userProfileStatus = responseJSON.status;
   const userProfileResult = responseJSON.result[0];
+
   if(userProfileStatus === 'OK')
     res.send(`Hi ${userProfileResult.rank}`);
   else
