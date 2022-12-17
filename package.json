@@ -9,20 +9,18 @@
     "npm": "6.14.11"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "watch": "nodemon index.js"
   },
-  "author": "",
+  "author": "Anay & Bhaskar",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.25.0",
+    "axios": "^1.2.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.2",
-    "express-validator": "^6.14.0",
-    "mongoose": "^6.2.1",
-    "node-cron": "^3.0.0",
-    "node-fetch": "^3.2.0",
-    "nodemailer": "^6.7.2"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "mongoose": "^6.8.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
