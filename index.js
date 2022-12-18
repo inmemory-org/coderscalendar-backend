@@ -3,6 +3,7 @@ import connectToMongo from "./db.js";
 import express from "express";
 import cors from "cors";
 import userValidationRoutes from "./routes/userValidation.js";
+import contestRankingRoutes from "./routes/contestRanking.js"
 
 const app = express();
 // connectToMongo();
@@ -18,6 +19,7 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 
 app.use("/api", userValidationRoutes);
+app.use("/api", contestRankingRoutes);
 
 app.listen(port, () => {
   console.log(`BACKEND IS RUNNING`);
