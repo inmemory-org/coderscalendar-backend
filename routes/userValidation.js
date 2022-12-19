@@ -4,7 +4,7 @@ const router = express.Router();
 
 
 router.param("username", populateRequestWithUsername);
-router.get("/validate-CF-profile/:username", validateUser);
+router.get("/validate/cf/:username", validateUser);
 
 
 // TODO
