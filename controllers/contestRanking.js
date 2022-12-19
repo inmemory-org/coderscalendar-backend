@@ -1,13 +1,26 @@
 import "dotenv/config";
 import fetch from "node-fetch";
 
-const get_CF_contest_standings = async (req, res) => {
+const populateRequestWithContestId = (req, res, next, contestId) => {
+  req.contestId = contestId;
+  next();
+};
+
+const getCodeforcesRanking = (req, res) => {
   try {
-    res.send("Codeforces contest ranking");
+    // let contestId = req.contestId;
+    let url = `https://codeforces.com/api/contest.ratingChanges?contestId=${req.contestId}`;
+
+    fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        res.send(data);
+      });
   } catch (error) {
     console.log(error);
   }
 };
 
-
-export { get_CF_contest_standings };
+export { getCodeforcesRanking, populateRequestWithContestId };
