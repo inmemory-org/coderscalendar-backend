@@ -1,26 +1,26 @@
 import "dotenv/config";
 import fetch from "node-fetch";
 
-const populateRequestWithContestId = (req, res, next, contestId) => {
-  req.contestId = contestId;
-  next();
-};
-
-const getCodeforcesRanking = (req, res) => {
+const getCodeforcesRanking = async (req, res) => {
   try {
-    // let contestId = req.contestId;
-    let url = `https://codeforces.com/api/contest.ratingChanges?contestId=${req.contestId}`;
+    const response = await fetch(`https://codeforces.com/api/contest.ratingChanges?contestId=${req.contestID}`, {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+      },
+  })
+  
+    const responseJSON = await response.json();
+    res.send(responseJSON);
 
-    fetch(url)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        res.send(data);
-      });
   } catch (error) {
     console.log(error);
   }
+};
+
+const populateRequestWithContestId = (req, res, next, contestID) => {
+  req.contestID = contestID;
+  next();
 };
 
 export { getCodeforcesRanking, populateRequestWithContestId };

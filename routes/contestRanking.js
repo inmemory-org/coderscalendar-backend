@@ -5,7 +5,7 @@ import {
 } from "../controllers/contestRanking.js";
 const router = express.Router();
 
-router.param("contestId", populateRequestWithContestId);
-router.get("/contest/cf/:contestID/ranking", getCodeforcesRanking);
+router.param("contestID", populateRequestWithContestId);
+router.get("/contest/:contestID/ranking", getCodeforcesRanking);
 
 export default router;
