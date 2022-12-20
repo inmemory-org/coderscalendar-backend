@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import userValidationRoutes from "./routes/userValidation.js";
 import contestRankingRoutes from "./routes/contestRanking.js"
-import connectDatabase from "./config/database.js";
+import connectDatabase from "./db/database.js";
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(
 );
 
 //config
-dotenv.config({path : "config/config.env"});
+dotenv.config({path : ".env"});
 
 connectDatabase();
 
