@@ -1,12 +1,12 @@
-import "dotenv/config";
-import connectToMongo from "./db.js";
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import userValidationRoutes from "./routes/userValidation.js";
 import contestRankingRoutes from "./routes/contestRanking.js"
+import connectDatabase from "./db/database.js";
 
 const app = express();
-// connectToMongo();
+
 app.use(
   cors({
     origin: "*",
@@ -15,12 +15,16 @@ app.use(
   })
 );
 
-const port = process.env.PORT || 8000;
+//config
+dotenv.config({path : ".env"});
+
+connectDatabase();
+
 app.use(express.json());
 
 app.use("/api", userValidationRoutes);
 app.use("/api", contestRankingRoutes);
 
-app.listen(port, () => {
-  console.log(`BACKEND IS RUNNING`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is connected`);
 });
