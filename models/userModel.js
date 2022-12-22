@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import validate from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// import { randomBytes, createHash } from "crypto";
+import { randomBytes, createHash } from "crypto";
 
 const userSchema = new Schema({
   name: {
@@ -56,19 +56,19 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-// // Generating Password Reset Token
-// userSchema.methods.getResetPasswordToken = function () {
-//   // Generating Token
-//   const resetToken = randomBytes(20).toString("hex");
+// Generating Password Reset Token
+userSchema.methods.passwordTokenReset = function () {
+  // Generating Token
+  const resetToken = randomBytes(20).toString("hex");
 
-//   // Hashing and adding resetPasswordToken to userSchema
-//   this.resetPasswordToken = createHash("sha256")
-//     .update(resetToken)
-//     .digest("hex");
+  // Hashing and adding resetPasswordToken to userSchema
+  this.resetPasswordToken = createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-//   this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
-//   return resetToken;
-// };
+  return resetToken;
+};
 
 export default model("User", userSchema);
