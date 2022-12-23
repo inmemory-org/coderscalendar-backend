@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
+import { stringify } from "querystring";
 
 const contestSchema = new Schema({
-  id: {
+  contest_id: {
     type: String,
     required: [true, "Please Enter contest ID"],
     unique: true
@@ -11,7 +12,7 @@ const contestSchema = new Schema({
     required: [true, "Please Enter contest Name"],
   },
   url: {
-    type: url,
+    type: String,
     required: [true, "Please Enter contest Registration URL"],
     unique: true
   },
