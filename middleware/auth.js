@@ -1,18 +1,18 @@
 import ErrorHander from "../utils/errorhander.js";
 import catchAsyncErrors from "./catchAsyncErrors.js";
 import { verify } from "jsonwebtoken";
-import { findById } from "../models/userModel.js";
+import User from "../models/userModel.js";
 
 export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return next(new ErrorHander("Please Login to access this resource", 401));
+    return next(new ErrorHander("Please Login to access this page", 401));
   }
 
   const decodedData = verify(token, process.env.JWT_SECRET);
 
-  req.user = await findById(decodedData.id);
+  req.user = await User.findById(decodedData.id);
 
   next();
 });
@@ -22,7 +22,7 @@ export function authorizeRoles(...roles) {
     if (!roles.includes(req.user.role)) {
       return next(
         new ErrorHander(
-          `Role: ${req.user.role} is not allowed to access this resouce `,
+          `${req.user.role} is not allowed to access this page`,
           403
         )
       );
