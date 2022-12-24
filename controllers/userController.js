@@ -4,8 +4,9 @@ import User from "../models/userModel.js";
 import sendToken from "../utils/jwtToken.js";
 import sendEmail from "../utils/sendEmail.js";
 import crypto from "crypto";
+import Token from "../models/tokenModel.js";
 // import { v2 } from "cloudinary";
-
+import generateOTP from "./../utils/generateOtp.js"
 
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -13,11 +14,24 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.create({
     name,
     email,
-    password
+    password,
+  });
+
+  // send email to the user email address
+  let otp = generateOTP();
+
+  let options = {
+    email: user.email,
+    subject: "Verify Your Email",
+    message: `Hi ${user.name}! \n Your OTP is : ${otp}.\n Thank you for signing up`
+  };
+
+  await sendEmail(options).then(async () => {
+    await Token.deleteMany({ userId: user._id });
+    await Token.create({ userId: user._id, token: otp });
   });
 
   sendToken(user, 201, res);
-
 });
 
 // Login User
@@ -42,7 +56,26 @@ export const loginUser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHander("Invalid email or password", 401));
   }
 
-  sendToken(user,200,res);
+  sendToken(user, 200, res);
+});
+
+// verify user email token
+export const verifyToken = catchAsyncErrors(async (req, res, next) => {
+  const doc = await Token.findOne({ token: req.params.token });
+  if (!doc) {
+    return next(new ErrorHander("Invalid Token", 400));
+  }
+
+  const user = await User.findOne({ _id: doc.userId });
+  user.verified_email = true;
+  await user.save();
+  await Token.deleteMany({ userId: user._id });
+  return res
+    .status(200)
+    .json({
+      success: true,
+      msg: "Congratulations! You have successfully verified.",
+    });
 });
 
 // Logout User

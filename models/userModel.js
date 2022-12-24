@@ -17,6 +17,10 @@ const userSchema = new Schema({
     unique: true,
     validate: [validate.isEmail, "Please Enter a valid Email"],
   },
+  verified_email: {
+    type: Boolean,
+    default: false,
+  },
   password: {
     type: String,
     required: [true, "Please Enter Your Password"],
