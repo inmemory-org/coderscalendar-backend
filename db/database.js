@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const connectDatabase = () => {
+const connectDatabase = async () => {
   mongoose.set('strictQuery', false);
-  mongoose.connect(process.env.MONGODB_URI)
+ await mongoose.connect(process.env.LOCAL_URI)
     .then((data) => {
       console.log(`Mongodb connected with server: ${data.connection.host}`);
     });

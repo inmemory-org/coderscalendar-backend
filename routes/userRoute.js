@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser , loginUser, logoutUser, forgotPassword, resetPassword, getUserDetails, getAllUser, getSingleUser, updateUserRole, deleteUser } from "../controllers/userController.js";
+import { registerUser , loginUser,verifyToken, logoutUser, forgotPassword, resetPassword, getUserDetails, getAllUser, getSingleUser, updateUserRole, deleteUser } from "../controllers/userController.js";
 import { isAuthenticatedUser, authorizeRoles } from "../middleware/auth.js";
 
 const router = Router();
@@ -7,6 +7,8 @@ const router = Router();
 router.route("/register").post(registerUser);
 
 router.route("/login").post(loginUser);
+
+router.route("/email/:token").get(verifyToken);
 
 router.route("/password/forgot").post(forgotPassword);
 
