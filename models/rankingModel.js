@@ -1,7 +1,32 @@
-// users: [bhaskar- rank 1, hasnat -  rank 2, abc - 3,... ]
-// contestID
+import { Schema, model } from "mongoose";
 
-// Storage
+const rankingSchema = new Schema({
+  contest_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Contest",
+    required: [true, "Please Enter contest ID"],
+  },
+  users:[
+    {
+        participant_id: {
+            type: Schema.Types.ObjectId,
+            ref: "Participants",
+            required: [true, "Please Enter Participants ID"],
+        },
+        rank:{
+            type: Number,
+            default: 0
+        }
+
+    }
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+export default model("Ranking", rankingSchema);
 
 
 
