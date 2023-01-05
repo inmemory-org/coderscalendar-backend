@@ -12,10 +12,12 @@ app.use(cookieParser());
 import user from "./routes/userRoute.js";
 import contest from "./routes/contestRoute.js";
 import participants from "./routes/participantsRoute.js";
+import ranking from "./routes/rankingRoute.js"
 
 app.use("/api/v1", user);
 app.use("/api/v1", contest);
 app.use("/api/v1", participants)
+app.use("/api/v1", ranking)
 
 // Middleware for Errors
 app.use(errorMiddleware);

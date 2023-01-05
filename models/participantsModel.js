@@ -9,7 +9,7 @@ const participantsSchema = new Schema({
   handle_id: {
     type: String,
     required: [true, "Please Enter handle ID"],
-    unique: true,
+    unique: [true, "Please Enter unique handle ID"]
   },
   user_id: {
     type: Schema.Types.ObjectId,

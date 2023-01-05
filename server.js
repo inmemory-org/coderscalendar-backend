@@ -13,6 +13,6 @@ connectDatabase();
 
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server is connected`);
+    console.log(`Server is connected`,process.env.PORT);
 });
   
